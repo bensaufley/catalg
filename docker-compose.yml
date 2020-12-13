@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  rdbms:
+    image: postgres:13.1-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: catalg_dev
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    command:
+      - air
+      - -c
+      - air.toml
+    environment:
+      PORT: 8080
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_NAME: catalg_dev
+    ports:
+      - '55550:8080'
+    volumes:
+      - './server:/usr/src/go/github.com/bensaufley/catalg/server'
+      - /usr/src/go/github.com/bensaufley/catalg/server/tmp

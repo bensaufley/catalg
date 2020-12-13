@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+cd "$(dirname "$0")/.."
+
+script/update
+
+docker-compose up
+
+ec="$?"
+
+docker-compose down
+
+exit "$ec"

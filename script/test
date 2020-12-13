@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+cd "$(dirname "$0")/.."
+
+script/setup
+
+selected_app="$(echo "${1:-all}" | tr '[:upper:]' '[:lower:]')"
+
+apps=( server )
+
+for app in "${apps[@]}"; do
+  [ "$selected_app" != "$app" ] && [ "$selected_app" != "all" ] && continue
+  docker-compose run --rm "$app" script/test
+done
