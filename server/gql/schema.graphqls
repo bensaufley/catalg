@@ -1,0 +1,17 @@
+scalar Time
+
+type User {
+    UUID: String!
+    CreatedAt: Time!
+    UpdatedAt: Time!
+    DeletedAt: Time
+
+    Username: String!
+    Email: String!
+}
+
+type Query {
+    users: [User!]
+    findUser(query: String!): User
+    user(uuid: String!): User
+}

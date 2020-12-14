@@ -11,10 +11,10 @@ import (
 
 type User struct {
 	Model
-	Username         string         `gorm:"size:32;uniqueIndex;not null"`
-	Email            string         `gorm:"size:128;uniqueIndex;not null"`
-	PasswordDigest   sql.NullString `gorm:"size:72"`
-	Salt             sql.NullString `gorm:"size:32"`
+	Username         string         `json:"username" gorm:"size:32;uniqueIndex;not null"`
+	Email            string         `json:"email" gorm:"size:128;uniqueIndex;not null"`
+	PasswordDigest   sql.NullString `json:"passwordDigest" gorm:"size:72"`
+	Salt             sql.NullString `json:"_" gorm:"size:32"`
 	ActivatedAt      sql.NullTime
 	EmailConfirmedAt sql.NullTime
 }
