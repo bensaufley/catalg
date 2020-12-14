@@ -1,12 +1,14 @@
 package server
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 
-	"github.com/bensaufley/catalg/server/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"github.com/bensaufley/catalg/server/internal/log"
+	"github.com/bensaufley/catalg/server/internal/models"
 )
 
 type Opts struct {
@@ -19,7 +21,8 @@ type Opts struct {
 }
 
 func Serve(opts Opts) {
-	db, err := gorm.Open(postgres.Open("test.db"), &gorm.Config{})
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", opts.DBUser, opts.DBPassword, opts.DBHost, opts.DBPort, opts.DBName)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	}
@@ -30,14 +33,8 @@ func Serve(opts Opts) {
 		log.Fatalf("failed to migrate database: %v", err)
 	}
 
-	port := opts.Port
-	if port == "" {
-		port = "8080"
-		log.Println("PORT was not set. Defaulting to 8080")
-	}
-
-	log.Printf("Listening on :%s\n", port)
-	if err := http.ListenAndServe(":"+port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	log.Infof("Listening on :%s\n", opts.Port)
+	if err := http.ListenAndServe(":"+opts.Port, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})); err != nil {
 		log.Fatalf("error starting server: %v", err)

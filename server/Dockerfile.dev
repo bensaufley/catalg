@@ -3,3 +3,6 @@ FROM golang:1.15
 WORKDIR /usr/src/go/github.com/bensaufley/catalg/server
 
 RUN go get github.com/cosmtrek/air
+
+COPY go.mod go.sum ./
+RUN go mod download

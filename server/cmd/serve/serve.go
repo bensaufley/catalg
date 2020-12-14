@@ -1,18 +1,17 @@
 package main
 
 import (
-	"os"
-
 	"github.com/bensaufley/catalg/server/internal/server"
+	"github.com/bensaufley/catalg/server/internal/stubbables"
 )
 
 func main() {
 	server.Serve(server.Opts{
-		DBHost:     os.Getenv("DATABASE_HOST"),
-		DBName:     os.Getenv("DATABASE_NAME"),
-		DBPassword: os.Getenv("DATABASE_PASSWORD"),
-		DBPort:     os.Getenv("DATABASE_PORT"),
-		DBUser:     os.Getenv("DATABASE_USER"),
-		Port:       os.Getenv("PORT"),
+		DBHost:     stubbables.GetEnvWithDefault("DATABASE_HOST", "localhost"),
+		DBName:     stubbables.MustGetEnv("DATABASE_NAME"),
+		DBPassword: stubbables.MustGetEnv("DATABASE_PASSWORD"),
+		DBPort:     stubbables.GetEnvWithDefault("DATABASE_PORT", "5432"),
+		DBUser:     stubbables.MustGetEnv("DATABASE_USER"),
+		Port:       stubbables.GetEnvWithDefault("PORT", "8080"),
 	})
 }

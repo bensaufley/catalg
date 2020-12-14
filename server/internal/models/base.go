@@ -3,8 +3,9 @@ package models
 import (
 	"time"
 
-	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
+
+	"github.com/bensaufley/catalg/server/internal/stubbables"
 )
 
 // Model overrides the base Gorm model type to use UUID for id
@@ -17,6 +18,6 @@ type Model struct {
 
 // BeforeCreate sets the UUID
 func (m *Model) BeforeCreate(tx *gorm.DB) error {
-	m.UUID = uuid.NewV1().String()
+	m.UUID = stubbables.UUIDv1()
 	return nil
 }

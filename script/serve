@@ -4,6 +4,7 @@ cd "$(dirname "$0")/.."
 
 script/update
 
+docker-compose run --rm start_rdbms
 docker-compose up
 
 ec="$?"

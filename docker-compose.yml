@@ -1,12 +1,6 @@
 version: '3.9'
 
 services:
-  rdbms:
-    image: postgres:13.1-alpine
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: catalg_dev
   server:
     build:
       context: ./server
@@ -15,13 +9,31 @@ services:
       - air
       - -c
       - air.toml
+    depends_on:
+      - rdbms
     environment:
-      PORT: 8080
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: postgres
+      DATABASE_HOST: rdbms
       DATABASE_NAME: catalg_dev
+      DATABASE_PASSWORD: postgres
+      DATABASE_USER: postgres
+      PASSWORD_PEPPER: 'dev environment pepper'
+      PORT: 8080
     ports:
       - '55550:8080'
     volumes:
       - './server:/usr/src/go/github.com/bensaufley/catalg/server'
       - /usr/src/go/github.com/bensaufley/catalg/server/tmp
+  rdbms:
+    image: postgres:13.1-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: catalg_dev
+    ports:
+      - 55551:5432
+  start_rdbms:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - rdbms
+    command:
+      - rdbms:5432
