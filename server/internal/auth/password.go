@@ -20,7 +20,7 @@ func init() {
 func HashPassword(password string) (string, string) {
 	salt := stubbables.RandomChars(32)
 	hash := stubbables.Argon2IDKey([]byte(pepper+password), []byte(salt), 1, 64*1024, 4, 72)
-	return string(hash), pepper
+	return string(hash), salt
 }
 
 func ComparePassword(input string, digest string, salt string) bool {

@@ -17,7 +17,7 @@ type Model struct {
 }
 
 // BeforeCreate sets the UUID
-func (m *Model) BeforeCreate(tx *gorm.DB) error {
+func (m *Model) BeforeCreate(*gorm.DB) error {
 	m.UUID = stubbables.UUIDv1()
 	return nil
 }
