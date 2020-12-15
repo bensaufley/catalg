@@ -20,6 +20,7 @@ services:
       PORT: 8080
     ports:
       - '55550:8080'
+    tty: true
     volumes:
       - './server:/usr/src/go/github.com/bensaufley/catalg/server'
       - /usr/src/go/github.com/bensaufley/catalg/server/tmp

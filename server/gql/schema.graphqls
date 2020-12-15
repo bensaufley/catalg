@@ -1,17 +1,17 @@
 scalar Time
 
 type User {
-    UUID: String!
-    CreatedAt: Time!
-    UpdatedAt: Time!
-    DeletedAt: Time
+    uuid: String!
+    createdAt: Time!
+    updatedAt: Time!
+    deletedAt: Time
 
-    Username: String!
-    Email: String!
+    username: String!
+    email: String!
 }
 
 type Query {
-    users: [User!]
-    findUser(query: String!): User
-    user(uuid: String!): User
+    getUsers: [User!]!
+    findUsers(query: String!): [User!]!
+    getUser(uuid: String!): User
 }

@@ -5,30 +5,46 @@ package graph
 
 import (
 	"context"
+	"errors"
 
 	"github.com/bensaufley/catalg/server/internal/graph/generated"
+	"github.com/bensaufley/catalg/server/internal/log"
 	"github.com/bensaufley/catalg/server/internal/models"
 )
 
-func (r *queryResolver) Users(ctx context.Context) ([]*models.User, error) {
+func (r *queryResolver) GetUsers(ctx context.Context) ([]*models.User, error) {
 	var users []*models.User
 	r.DB.Find(&users)
 
 	return users, nil
 }
 
-func (r *queryResolver) FindUser(ctx context.Context, query string) (*models.User, error) {
-	var user *models.User
-	tmpl := "%"+query+"%"
-	r.DB.Where("username LIKE ? OR email LIKE ?", tmpl).Find(&user)
+func (r *queryResolver) FindUsers(ctx context.Context, query string) ([]*models.User, error) {
+	if query == "" {
+		return []*models.User{}, errors.New("query is required")
+	}
+	var users []*models.User
+	tmpl := "%" + query + "%"
+	log.WithField("tmpl", tmpl).Debug("about to query")
+	if tx := r.DB.WithContext(ctx).Where("username LIKE ? OR email LIKE ?", tmpl, tmpl).Find(&users); tx.Error != nil {
+		log.WithError(tx.Error).WithField("query", query).Warn("error looking up users by query")
+		return nil, errors.New("could not find users for that query")
+	} else if tx.RowsAffected < 1 {
+		return []*models.User{}, nil
+	}
 
-	return user, nil
+	return users, nil
 }
 
-func (r *queryResolver) User(ctx context.Context, uuid string) (*models.User, error) {
-	var user *models.User
-	r.DB.Where("uuid = ?", uuid).Find(&user)
-	return user, nil
+func (r *queryResolver) GetUser(ctx context.Context, uuid string) (*models.User, error) {
+	var user models.User
+	if tx := r.DB.WithContext(ctx).Where("uuid = ?", uuid).Find(&user); tx.Error != nil {
+		log.WithError(tx.Error).WithField("uuid", uuid).Warn("error looking up user by UUID")
+		return nil, errors.New("uuid not valid")
+	} else if tx.RowsAffected < 1 {
+		return nil, nil
+	}
+	return &user, nil
 }
 
 // Query returns generated.QueryResolver implementation.

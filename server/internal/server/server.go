@@ -26,7 +26,9 @@ type Opts struct {
 
 func Serve(opts Opts) {
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", opts.DBUser, opts.DBPassword, opts.DBHost, opts.DBPort, opts.DBName)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: &log.GormLogger{},
+	})
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	}
@@ -44,7 +46,7 @@ func Serve(opts Opts) {
 	http.Handle("/graphiql", playground.Handler("GraphQL playground", "/api"))
 	http.Handle("/api", srv)
 
-	log.Infof("Listening on :%s\n", opts.Port)
+	log.Infof("Listening on :%s", opts.Port)
 	if err := http.ListenAndServe(":"+opts.Port, nil); err != nil {
 		log.Fatalf("error starting server: %v", err)
 	}
