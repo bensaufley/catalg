@@ -1,11 +1,10 @@
-package validators
+package validation
 
 import (
-	"errors"
 	"strings"
 )
 
-var letters = func()string {
+var letters = func() string {
 	str := strings.Builder{}
 	for c := 'A'; c <= 'Z'; c++ {
 		str.WriteRune(c)
@@ -15,25 +14,25 @@ var letters = func()string {
 }()
 
 // Password returns an error if a password is not valid
-func Password(password string) error {
+func Password(password string) *Error {
 	if password == "" {
-		return errors.New("password is blank")
+		return NewError("password", "cannot be blank")
 	}
 
 	if len(password) < 8 {
-		return errors.New("password is too short")
+		return NewError("password", "cannot be shorter than 8 characters")
 	}
 
 	if len(password) > 128 {
-		return errors.New("password is too long")
+		return NewError("password", "cannot be longer than 128 characters")
 	}
 
 	if !strings.ContainsAny(password, letters) {
-		return errors.New("password contains no letters")
+		return NewError("password", "must contain letters")
 	}
 
 	if !strings.ContainsAny(password, "1234567890`~!@#$%^&*()_+-=,./;'[]\\<>?:\"{}| ") {
-		return errors.New("password contains no numbers or symbols")
+		return NewError("password", "must contain numbers or symbols")
 	}
 
 	return nil

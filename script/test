@@ -2,13 +2,19 @@
 
 cd "$(dirname "$0")/.."
 
-script/setup
+script/update
 
 selected_app="$(echo "${1:-all}" | tr '[:upper:]' '[:lower:]')"
 
-apps=( server )
-
-for app in "${apps[@]}"; do
-  [ "$selected_app" != "$app" ] && [ "$selected_app" != "all" ] && continue
-  docker-compose run --rm "$app" script/test
-done
+if [ "$selected_app" = "all" ] || [ "$selected_app" = "server" ]; then
+  docker-compose run --rm start_rdbms
+  docker-compose run \
+    -e APP_ENV=test \
+    --rm \
+    server \
+    go test \
+      -race \
+      -covermode atomic \
+      -coverprofile cover.out \
+      ./...
+fi

@@ -1,0 +1,23 @@
+type User {
+    uuid: String!
+    createdAt: Time!
+    updatedAt: Time!
+    deletedAt: Time
+
+    username: String!
+    email: String!
+}
+
+input CreateUserParams {
+    username: String!
+    email: String!
+    password: String!
+}
+
+input UpdateUserParams {
+    uuid: ID!
+    username: String
+    email: String
+    newPassword: String
+    password: String!
+}

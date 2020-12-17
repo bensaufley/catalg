@@ -1,17 +1,12 @@
 scalar Time
 
-type User {
-    uuid: String!
-    createdAt: Time!
-    updatedAt: Time!
-    deletedAt: Time
-
-    username: String!
-    email: String!
-}
-
 type Query {
     getUsers: [User!]!
     findUsers(query: String!): [User!]!
     getUser(uuid: String!): User
+}
+
+type Mutation {
+    createUser(user: CreateUserParams): User!
+    updateUser(user: UpdateUserParams): User!
 }

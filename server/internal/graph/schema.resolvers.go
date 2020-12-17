@@ -12,6 +12,25 @@ import (
 	"github.com/bensaufley/catalg/server/internal/models"
 )
 
+func (r *mutationResolver) CreateUser(ctx context.Context, user *models.CreateUserParams) (*models.User, error) {
+	return models.CreateUser(
+		ctx,
+		r.DB,
+		models.User{Username: user.Username, Email: user.Email},
+		user.Password,
+	)
+}
+
+func (r *mutationResolver) UpdateUser(ctx context.Context, user *models.UpdateUserParams) (*models.User, error) {
+	return models.UpdateUser(
+		ctx,
+		r.DB,
+		user.UUID,
+		user.Password,
+		models.UserUpdateParams{Username: user.Username, Email: user.Email, Password: user.NewPassword},
+	)
+}
+
 func (r *queryResolver) GetUsers(ctx context.Context) ([]*models.User, error) {
 	var users []*models.User
 	r.DB.Find(&users)
@@ -47,7 +66,11 @@ func (r *queryResolver) GetUser(ctx context.Context, uuid string) (*models.User,
 	return &user, nil
 }
 
+// Mutation returns generated.MutationResolver implementation.
+func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
+
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
