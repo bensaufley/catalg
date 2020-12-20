@@ -12,7 +12,7 @@ import (
 	"github.com/bensaufley/catalg/server/internal/graph"
 	"github.com/bensaufley/catalg/server/internal/graph/generated"
 	"github.com/bensaufley/catalg/server/internal/log"
-	"github.com/bensaufley/catalg/server/internal/models"
+	"github.com/bensaufley/catalg/server/internal/migrations"
 )
 
 type Opts struct {
@@ -33,9 +33,7 @@ func Serve(opts Opts) {
 		log.Fatalf("failed to connect database: %v", err)
 	}
 
-	if err = db.AutoMigrate(
-		&models.User{},
-	); err != nil {
+	if err = migrations.Perform(db); err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
 	}
 

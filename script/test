@@ -5,16 +5,23 @@ cd "$(dirname "$0")/.."
 script/update
 
 selected_app="$(echo "${1:-all}" | tr '[:upper:]' '[:lower:]')"
+shift
 
 if [ "$selected_app" = "all" ] || [ "$selected_app" = "server" ]; then
+  args=( "${@}" )
+  if [ "${#}" = "0" ]; then args=( './...' ); fi
+
+  echo "args:" "${args[@]}"
+
   docker-compose run --rm start_rdbms
   docker-compose run \
     -e APP_ENV=test \
+    -e DATABASE_NAME=catalg_test \
     --rm \
     server \
     go test \
       -race \
       -covermode atomic \
       -coverprofile cover.out \
-      ./...
+      "${args[@]}"
 fi

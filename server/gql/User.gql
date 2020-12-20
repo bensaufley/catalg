@@ -21,3 +21,9 @@ input UpdateUserParams {
     newPassword: String
     password: String!
 }
+
+input ResetPasswordParams {
+    uuid: ID!
+    newPassword: String!
+    token: String!
+}

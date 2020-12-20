@@ -8,6 +8,12 @@ type CreateUserParams struct {
 	Password string `json:"password"`
 }
 
+type ResetPasswordParams struct {
+	UUID        string `json:"uuid"`
+	NewPassword string `json:"newPassword"`
+	Token       string `json:"token"`
+}
+
 type UpdateUserParams struct {
 	UUID        string  `json:"uuid"`
 	Username    *string `json:"username"`

@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/bensaufley/catalg/server/internal/graph/generated"
 	"github.com/bensaufley/catalg/server/internal/log"
@@ -22,13 +23,16 @@ func (r *mutationResolver) CreateUser(ctx context.Context, user *models.CreateUs
 }
 
 func (r *mutationResolver) UpdateUser(ctx context.Context, user *models.UpdateUserParams) (*models.User, error) {
-	return models.UpdateUser(
-		ctx,
-		r.DB,
-		user.UUID,
-		user.Password,
-		models.UserUpdateParams{Username: user.Username, Email: user.Email, Password: user.NewPassword},
-	)
+	return models.UpdateUser(ctx, r.DB, *user)
+}
+
+func (r *mutationResolver) RequestPasswordReset(ctx context.Context, email string) (*string, error) {
+	models.GeneratePasswordReset(ctx, r.DB, email)
+	return nil, nil
+}
+
+func (r *mutationResolver) ResetPassword(ctx context.Context, params *models.ResetPasswordParams) (bool, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) GetUsers(ctx context.Context) ([]*models.User, error) {

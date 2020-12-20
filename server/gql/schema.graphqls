@@ -1,4 +1,5 @@
 scalar Time
+scalar Null
 
 type Query {
     getUsers: [User!]!
@@ -9,4 +10,6 @@ type Query {
 type Mutation {
     createUser(user: CreateUserParams): User!
     updateUser(user: UpdateUserParams): User!
+    requestPasswordReset(email: String!): Null
+    resetPassword(params: ResetPasswordParams): Boolean!
 }

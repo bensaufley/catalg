@@ -21,3 +21,18 @@ func (m *Model) BeforeCreate(*gorm.DB) error {
 	m.UUID = stubbables.UUIDv1()
 	return nil
 }
+
+type updateMap map[string]interface{}
+
+func (m *updateMap) assign(key string, val interface{}) *updateMap {
+	(*m)[key] = val
+	return m
+}
+
+func (m *updateMap) assignIfPresent(key string, val interface{}) *updateMap {
+	if val == nil {
+		return m
+	}
+	(*m)[key] = val
+	return m
+}
