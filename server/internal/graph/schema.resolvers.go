@@ -27,7 +27,7 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, user *models.UpdateUs
 }
 
 func (r *mutationResolver) RequestPasswordReset(ctx context.Context, email string) (*string, error) {
-	models.GeneratePasswordReset(ctx, r.DB, email)
+	models.GeneratePasswordReset(ctx, r.DB, email, r.EmailClient)
 	return nil, nil
 }
 

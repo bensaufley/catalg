@@ -74,21 +74,12 @@ func TestUpdateUser(t *testing.T) {
 }
 
 func TestUser_Authenticate(t *testing.T) {
-	type fields struct {
-		Model            models.Model
-		Username         string
-		Email            string
-		PasswordDigest   sql.NullString
-		Salt             sql.NullString
-		ActivatedAt      sql.NullTime
-		EmailConfirmedAt sql.NullTime
-	}
 	type args struct {
 		password string
 	}
 	testCases := []struct {
 		it      string
-		fields  fields
+		user    *models.User
 		args    args
 		wantErr bool
 	}{
@@ -101,16 +92,7 @@ func TestUser_Authenticate(t *testing.T) {
 			g.Run(testCase.it, func(test *testing.T) {
 				test.Parallel()
 
-				u := &models.User{
-					Model:            testCase.fields.Model,
-					Username:         testCase.fields.Username,
-					Email:            testCase.fields.Email,
-					PasswordDigest:   testCase.fields.PasswordDigest,
-					Salt:             testCase.fields.Salt,
-					ActivatedAt:      testCase.fields.ActivatedAt,
-					EmailConfirmedAt: testCase.fields.EmailConfirmedAt,
-				}
-				err := u.Authenticate(testCase.args.password)
+				err := testCase.user.Authenticate(testCase.args.password)
 
 				testutils.AssertError(test, testCase.wantErr, err)
 			})

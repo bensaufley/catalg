@@ -27,6 +27,7 @@ services:
       DATABASE_HOST: rdbms
       DATABASE_NAME: catalg_dev
       DATABASE_PASSWORD: postgres
+      DATABASE_PORT: 5432
       DATABASE_USER: postgres
       DOCKER: 'true'
       PASSWORD_PEPPER: 'dev environment pepper'
@@ -35,8 +36,8 @@ services:
       - '55550:8080'
     tty: true
     volumes:
-      - './server:/go/github.com/bensaufley/catalg/server'
-      - /go/github.com/bensaufley/catalg/server/tmp
+      - './server:/go/src/github.com/bensaufley/catalg/server'
+      - /go/src/github.com/bensaufley/catalg/server/tmp
   start_rdbms:
     image: dadarek/wait-for-dependencies
     depends_on:

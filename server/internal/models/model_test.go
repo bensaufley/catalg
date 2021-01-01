@@ -10,10 +10,6 @@ import (
 	"github.com/bensaufley/catalg/server/internal/testutils"
 )
 
-func TestMain(m *testing.M) {
-	testutils.WrapTests(m, testutils.PrepareDB)
-}
-
 func TestModel_BeforeCreate(test *testing.T) {
 	teardown := testutils.StubUUIDv1("my-test-uuid")
 	defer teardown()

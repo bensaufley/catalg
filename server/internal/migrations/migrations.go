@@ -7,5 +7,5 @@ import (
 )
 
 func Perform(db *gorm.DB) error {
-	return db.AutoMigrate(&models.User{})
+	return db.AutoMigrate(&models.User{}, &models.PasswordReset{})
 }
